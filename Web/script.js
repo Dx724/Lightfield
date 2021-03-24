@@ -8,6 +8,15 @@ var BLANK_POS = [-1, -1];
 var lastPos = BLANK_POS;
 var mousePos = BLANK_POS;
 
+var colorRect = [10, 10, 70, SIZE/5];
+var rainbow = ctx.createLinearGradient(colorRect[0], colorRect[1], colorRect[0], colorRect[3]);
+rainbow.addColorStop(0, "red");
+rainbow.addColorStop(1/6, "orange");
+rainbow.addColorStop(2/6, "yellow");
+rainbow.addColorStop(3/6, "green");
+rainbow.addColorStop(4/6, "blue");
+rainbow.addColorStop(5/6, "indigo");
+rainbow.addColorStop(1, "violet");
 
 function reset() {
     brushDown = false;
@@ -24,6 +33,10 @@ function storeMousePos(e) {
     var oy = (e.clientY - rect.top) / rect.height;
     var cx = ox * SIZE;
     var cy = oy * SIZE;
+    if (brushDown && cx > colorRect[0] && cx < colorRect[2] && cy > colorRect[1] && cy < colorRect[3]) {
+        new_color = ctx.getImageData(cx, cy, 1, 1).data;
+        brushColor = `rgba(${new_color.join(",")})`;
+    }
     mousePos = [ox, oy];
 }
 canvas.addEventListener("mousedown", (e) => {
@@ -63,6 +76,8 @@ function draw() {
         }
         lastPos = mousePos;
     }
+    ctx.fillStyle = rainbow;
+    ctx.fillRect(...colorRect);
 }
 
 reset();
