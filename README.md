@@ -13,6 +13,21 @@ The sculpture contains an ESP32 microcontroller which polls an [external API](ht
 
 The device also contained a stepper motor driven by a ULN2003 IC, a 9g micro servo, and an RGB LED.
 
+## Mechanical Structure
+The enclosure of this device was based on a large cylindrical can, paralleling the radial canvas of the system. However, any hollow container which can be opened will suffice.
+1. Drill a hole into the top surface of the container at the center large enough to fit the stepper motor.
+2. Insert the stepper motor and drill two additional holes for the mounting points.
+3. Thread M3 bolts through the two mounting holes and secure with nuts on the other side.
+4. Drill two holes along the "long" axis of a popsicle stick near on end so that the shaft of the stepper motor can be friction fit within.
+5. Using the [Servo_Test sketch](Test%20Programs/Servo_Test/Servo_Test.ino), rotate the servo to 180°.
+6. Attach a four-pronged servo arm to the servo, but before screwing it in, drill a hole near the end of another popsicle stick and thread the screw through that hole and then into the servo. The stick should be attached so that if it points "down" at 180°, it will point "left" at 90° (the Servo_Test sketch can be modified to validate this).
+7. Mount the servo to the unconnnected end of the stepper motor popsicle stick so that at 180°, the popscicle stick of the servo points directly towards the stepper motor shaft.
+8. Mount the RGB LED at the unconnected end of the servo motor popsicle stick so that it points upwards. This can be achieved by bending the LED's pins at a 90° angle.
+9. Cut a small hole at any point along the upper edge of the cylindrical enclosure to allow wires (for the stepper motor, servo motor, and RGB LED) to pass through.
+10. Place a smaller can (or other object) inside of the larger can and place the ESP32 inside the larger can, supported by the smaller can, so that it is oriented vertically.
+11. Drill a hole on the side surface near the bottom of the larger can. Pass a USB cable through this hole and connect it to the ESP32.
+12. Wire up the electronics as described in [ESP32 Wiring](#esp32-wiring) and then close the enclosure.
+   
 ## ESP32 Wiring
 __Stepper Motor__
 1. Connect the motor driver's pin IN1 to GPIO 14.
@@ -25,6 +40,16 @@ __Stepper Motor__
 8. Connect the motor driver's VCC and PWR input pins to a 5V source (with common ground between that source and the ESP32).
 
 __Servo Motor__
+
+_Note that sufficiently long wires (on the order of two popsicle stick lengths) should be used to connect the servo motor and the RGB LED to the ESP32 so as to allow connections to remain intact at the furthest extent of the movement range._
 1. Connect the servo's VCC line to a 5V source.
 2. Connect the servo's GND line to that source's GND (common with the ESP32's supply).
 3. Connect the servo's Signal line to GPIO 15 on the ESP32.
+
+__RGB LED__
+
+_Note that a common anode RGB LED was used. See [Common Cathode LEDs](#common-cathode-leds) below for common cathode LED usage instructions._
+1. Connect the common anode to a 3.3V supply.
+2. Connect the red LED cathode to GPIO 33 through a 220 Ω resistor.
+3. Connect the green LED cathode to GPIO 32 through a 220 Ω resistor.
+4. Connect the blue LED cathode to GPIO 4 through a 220 Ω resistor.

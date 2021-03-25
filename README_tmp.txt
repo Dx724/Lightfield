@@ -24,3 +24,4 @@ proj 3 --> temporal spacing
 
 Config: steps per revolution
 --> change to common cathode if desired
+tester programs (mentioned in documentation)
