@@ -7,6 +7,7 @@ Stepper stepper = Stepper(stepsPerRevolution, 14, 26, 27, 25);
 int currentRotation = 0;
 
 Servo servo;
+const int SERVO_OFFSET = 2; // Extra degrees past 45 to point straight back to center
 
 const int ledPins[] = {2, 32, 33}; // R, G, B
 const int pwmCh[] = {5, 6, 7};
@@ -22,13 +23,13 @@ void setup() {
   Serial.begin(9600);
   stepper.setSpeed(15);
 
-  servo.setPeriodHertz(50);
-  servo.attach(15, 500, 2500);
-
   for (int i = 0; i < 3; i++) {
     ledcSetup(pwmCh[i], 1000, 8);
     ledcAttachPin(ledPins[i], pwmCh[i]);
   }
+
+  servo.setPeriodHertz(50);
+  servo.attach(15, 500, 2500); // This will find an unused PWM channel to attach to
 }
 
 void stepper_move(int steps) {
@@ -48,10 +49,15 @@ void setColor(byte r, byte g, byte b) {
 
 void move_to_polar(double rad, double ang) {
   rad *= maxrad;
-  double theta1 = ang - acos((r1*r1+rad*rad-r2*r2)/(2*r1*rad));
+  double theta1 = acos((r1*r1+rad*rad-r2*r2)/(2*r1*rad));
   double theta2 = acos((r1*r1+r2*r2-rad*rad)/(2*r1*r2));
   theta1 *= 180.0 / PI;
   theta2 *= 180.0 / PI;
+  theta1 = ang - theta1;
+  theta2 = 45 + SERVO_OFFSET - theta2;
+  if (theta2 < 0) {
+    theta2 += 90; // Always want positive theta2
+  }
   stepper_to_angle(theta1);
   servo.write((int)theta2);
   Serial.print(theta1);
