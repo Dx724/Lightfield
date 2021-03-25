@@ -13,17 +13,16 @@ int currentRotation = 0;
 Servo servo;
 const int SERVO_OFFSET = 0; // Extra degrees past 180 to point straight back to center (should be a negative or zero quantity)
 
-const int ledPins[] = {33, 32, 2}; // R, G, B
+const int ledPins[] = {33, 32, 4}; // R, G, B
 const int pwmCh[] = {5, 6, 7};
-int red = 255;
-int green = 0;
-int blue = 255;
 
 double r1 = 8.89; // cm
 double r2 = 9.85; // cm
 double maxrad = r1 + r2 - 0.1; // cm (small tolerance provided)
 
 String address = "http://165.227.76.232:3000/dx2199/running";
+
+double BRIGHTNESS = 0.3; // Allow scaling down brightness to enable longer exposures
 
 void setup() {
   Serial.begin(9600);
@@ -43,8 +42,6 @@ void setup() {
     delay(500);
   }
   setColor(0, 255, 0);
-
-  do_artwork();
 }
 
 void stepper_move(int steps) {
@@ -62,6 +59,9 @@ void combo_move(double th1, double th2) {
 }
 
 void setColor(byte r, byte g, byte b) {
+  r *= BRIGHTNESS;
+  g *= BRIGHTNESS;
+  b *= BRIGHTNESS;
   ledcWrite(pwmCh[0], 255 - r);
   ledcWrite(pwmCh[1], 255 - g);
   ledcWrite(pwmCh[2], 255 - b);
