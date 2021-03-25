@@ -103,7 +103,14 @@ To connect a common cathode RGB LED:
 
 # Configuration
 ## What to draw?
-A premade sketch to draw a portion of the _Mona Lisa_ is provided [here](ESP32/Lightfield_MonaLisa.ino). Alternatively, select an image and place it in the `Artwork/` folder, then modify [`Artwork/convert_to_polar.py`](Artwork/convert_to_polar.py) with the appropriate file path. Run that Python script and the output will be placed in `Artwork/artwork.h`. Copy this file into `ESP32/Lightfield/`, replacing the preexisting file and then follow the instructions in [Installation](#installation) to upload the new artwork onto the device.
+A premade sketch to draw a portion of the _Mona Lisa_ is provided [here](ESP32/Lightfield_MonaLisa.ino). Alternatively, select an image and place it in the `Artwork/` folder, then modify [`Artwork/convert_to_polar.py`](Artwork/convert_to_polar.py) with the appropriate `FILE_PATH`. Increasing `NUM_POINTS` and decreasing `ANGULAR_SPACING` will increase the quality of the resultant image, but will result in a longer-duration image path (see [Photography](#photography) for details).
+
+ Run that Python script and the output will be placed in `Artwork/artwork.h`. A preview of the converted image will also be shown. Sample outputs are shown below, with one generated using `NUM_POINTS=1500` and `ANGULAR_SPACING=4` and the other generated using `NUM_POINTS=3000` and `ANGULAR_SPACING=3`.
+ 
+![Sample low resolution converted output](Artwork/StarryNightPlot_lowres.png)
+![Sample high resolution converted output](Artwork/StarryNightPlot_highres.png)
+
+ Copy the `artwork.h` file into `ESP32/Lightfield/`, replacing the preexisting file and then follow the instructions in [Installation](#installation) to upload the new artwork onto the device.
 
 ## Can I draw something myself?
 Of course! A web app is provided in `Web/` which can be accessed by opening [`Web/Index.html`](Web/Index.html) in your web browser of choice. Click within the circular field to draw and click along the color slider to change the brush color. Then, right click and save the image. Follow the instructions in [What to draw?](#what-to-draw) to prepare your drawing for the Lightfield.
@@ -117,3 +124,6 @@ The Lightfield artwork upload code is programmed to move in a spiral so that the
     }
 
 However, it was a key decision that the Lightfield draws along the spiral, changing colors rapidly, rather than drawing one color at a time. Doing so disconnects the temporal behavior of the Lightfield from that of the artist and their brushstrokes.
+
+# Photography
+For best results, photograph the Lightfield in a dark setting with a professional camera. Set the ISO to a minimum, use the Time or Bulb shutter speed setting, and minimize the aperture. If the result is overexposed, try compensating for exposure in the camera settings and decreasing the `BRIGHTNESS` parameter in `Lightfield.ino`. A neutral density filter can also help alleviate overexposure issues. Keep in mind that higher-resolution image paths will take longer to complete, and thus require more compensation to prevent overexposure.
