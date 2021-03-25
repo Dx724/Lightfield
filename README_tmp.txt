@@ -17,3 +17,10 @@ Spiral instead of circle! Why think only in terms of traditional angular movemen
 TODO: documentation, API
 
 secrets.h
+
+
+proj 1 --> random, trig
+proj 3 --> temporal spacing
+
+Config: steps per revolution
+--> change to common cathode if desired
