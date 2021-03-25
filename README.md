@@ -45,6 +45,7 @@ _Note that sufficiently long wires (on the order of two popsicle stick lengths) 
 1. Connect the servo's VCC line to a 5V source.
 2. Connect the servo's GND line to that source's GND (common with the ESP32's supply).
 3. Connect the servo's Signal line to GPIO 15 on the ESP32.
+4. Connect a large capacitor (for example, 1000 µF) across the power supply near where the servo's VCC and GND lines are connected. This helps to stabilize the voltage during bursts of current draw, preventing servo buzz.
 
 __RGB LED__
 
@@ -53,3 +54,52 @@ _Note that a common anode RGB LED was used. See [Common Cathode LEDs](#common-ca
 2. Connect the red LED cathode to GPIO 33 through a 220 Ω resistor.
 3. Connect the green LED cathode to GPIO 32 through a 220 Ω resistor.
 4. Connect the blue LED cathode to GPIO 4 through a 220 Ω resistor.
+
+## Common Cathode LEDs
+To connect a common cathode RGB LED:
+1. Connect the common cathode to GND.
+2. Connect the red LED anode to GPIO 33 through a 2.2 kΩ resistor.
+3. Connect the green LED anode to GPIO 32 through a 2.2 kΩ resistor.
+4. Connect the blue LED anode to GPIO 34 through a 2.2 kΩ resistor.
+5. Modify the `setColor` function in `ESP32/Lightfield/Lightfield.ino` as follows:
+
+        void setColor(byte r, byte g, byte b) {
+            r *= BRIGHTNESS;
+            g *= BRIGHTNESS;
+            b *= BRIGHTNESS;
+            ledcWrite(pwmCh[0], r);
+            ledcWrite(pwmCh[1], g);
+            ledcWrite(pwmCh[2], b);
+        }
+
+## Software Dependencies
+- Arduino 1.8.13 (or similar)
+  - ESP32Servo library
+- Python 3.9
+  - Matplotlib
+  - PIL
+
+## Installation
+1. Create a file in `ESP32/Lightfield/` called `secrets.h` containing the following code (with the appropriate credentials inserted):
+
+        const char *wifi_ssid = "YOUR_WIFI_SSID";
+        const char *wifi_password = "YOUR_WIFI_PASSWORD";
+
+2. Upload the [sketch](ESP32/Lightfield/Lightfield.ino) to your ESP32.
+
+# Configuration
+## What to draw?
+A premade sketch to draw a portion of the _Mona Lisa_ is provided [here](ESP32/Lightfield_MonaLisa.ino). Alternatively, select an image and place it in the `Artwork/` folder, then modify [`Artwork/convert_to_polar.py`](Artwork/convert_to_polar.py) with the appropriate file path. Run that Python script and the output will be placed in `Artwork/artwork.h`. Copy this file into `ESP32/Lightfield/`, replacing the preexisting file and then follow the instructions in [Installation](#installation) to upload the new artwork onto the device.
+
+## Can I draw something myself?
+Of course! A web app is provided in `Web/` which can be accessed by opening [`Web/Index.html`](Web/Index.html) in your web browser of choice. Click within the circular field to draw and click along the color slider to change the brush color. Then, right click and save the image. Follow the instructions in [What to draw?](#what-to-draw) to prepare your drawing for the Lightfield.
+
+## Why spirals?
+The Lightfield artwork upload code is programmed to move in a spiral so that the choreography appears orderly yet decoupled from the final result to human viewers. However, the Lightfield is actually capable to more complex pathing such as linear motion. For example, the following code can be placed in the `loop` function of the `Lightfield.ino` sketch to draw a straight line:
+
+    for (float i = 0.1; i < 1.0; i += 0.01) {
+        move_to_polar(i, 35);
+        delay(50);
+    }
+
+However, it was a key decision that the Lightfield draws along the spiral, changing colors rapidly, rather than drawing one color at a time. Doing so disconnects the temporal behavior of the Lightfield from that of the artist and their brushstrokes.
