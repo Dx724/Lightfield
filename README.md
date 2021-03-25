@@ -7,6 +7,20 @@ Lightfield aims to emphasize this point by presenting artwork stretched along th
 
 Yet, from a computational point of view, each infintesimal slice of this movement holds substantial information. By taking a long exposure photograph of the sculpture, one can view the patterns that emerge. What was once some wooden sticks on a can of mixed nuts becomes _Mona Lisa_, or perhaps _The Starry Night_.
 
+# Table of Contents <!-- omit in toc -->
+- [Setup](#setup)
+  - [Hardware](#hardware)
+  - [Mechanical Structure](#mechanical-structure)
+  - [ESP32 Wiring](#esp32-wiring)
+  - [Common Cathode LEDs](#common-cathode-leds)
+  - [Software Dependencies](#software-dependencies)
+  - [Installation](#installation)
+- [Configuration](#configuration)
+  - [What to draw?](#what-to-draw)
+  - [Can I draw something myself?](#can-i-draw-something-myself)
+  - [Why spirals?](#why-spirals)
+- [Photography](#photography)
+
 # Setup
 ## Hardware
 The sculpture contains an ESP32 microcontroller which polls an [external API](https://github.com/mbennett12/kinetic-sculpture-webapi) for a start signal, translates from abstract image representations to physical paths, orchestrates motor movements, and varies the emitted colors. Specifically, a FreeNove ESP32-WROVER-DEV module was used here.
