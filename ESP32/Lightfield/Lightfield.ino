@@ -19,8 +19,6 @@ double r1 = 8.89; // cm
 double r2 = 9.85; // cm
 double maxrad = r1 + r2 - 0.1; // cm (small tolerance provided)
 
-int servo_rotation;
-
 void setup() {
   //Serial.begin(9600);
   stepper.setSpeed(15);
@@ -32,9 +30,6 @@ void setup() {
 
   servo.setPeriodHertz(50);
   servo.attach(15, 500, 2500); // This will find an unused PWM channel to attach to
-
-  servo_rotation = 90;
-  servo.write(90);
 }
 
 void stepper_move(int steps) {
@@ -47,20 +42,8 @@ void stepper_to_angle(double angle) { // Calculated with acos, so should remain 
 }
 
 void combo_move(double th1, double th2) {
-  int stepper_steps = (int) (stepsPerRevolution*(th1/360.0) - currentRotation);
-  int servo_delta = th2 - servo_rotation;
-
-  int granularity = 5;
-  for (int i = 0; i < stepper_steps - granularity; i += granularity) {
-    currentRotation += granularity;
-    stepper.step(granularity);
-    servo.write(servo_rotation + servo_delta * (i * 1.0/stepper_steps));
-    delay(100);
-  }
-  // Account for any remaining steps
   stepper_to_angle(th1);
   servo.write((int) th2);
-  servo_rotation = (int) th2;
 }
 
 void setColor(byte r, byte g, byte b) {
