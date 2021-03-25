@@ -1,6 +1,9 @@
 #include <Stepper.h>
 #include <ESP32Servo.h>
+#include <WiFi.h>
+#include <HTTPClient.h>
 #include "artwork.h"
+#include "secrets.h"
 
 const int stepsPerRevolution = 2038;
 
@@ -20,6 +23,8 @@ double r1 = 8.89; // cm
 double r2 = 9.85; // cm
 double maxrad = r1 + r2 - 0.1; // cm (small tolerance provided)
 
+String address = "http://165.227.76.232:3000/dx2199/running";
+
 void setup() {
   Serial.begin(9600);
   stepper.setSpeed(10);
@@ -31,6 +36,13 @@ void setup() {
 
   servo.setPeriodHertz(50);
   servo.attach(15, 500, 2500); // This will find an unused PWM channel to attach to
+
+  setColor(255, 0, 0);
+  WiFi.begin(wifi_ssid, wifi_password); // From secrets.h
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+  }
+  setColor(0, 255, 0);
 
   do_artwork();
 }
@@ -90,5 +102,23 @@ void loop() {
     move_to_polar(i, 35);
     delay(50);
   }*/
+  if (WiFi.status() == WL_CONNECTED) { // Based on https://github.com/mbennett12/kinetic-sculpture-webapi/blob/main/example_HTTP_get.ino
+    HTTPClient http;
+    http.begin(address);
+    
+    int httpCode = http.GET(); // start connection and send HTTP header
+    if (httpCode == HTTP_CODE_OK) { 
+        String response = http.getString();
+        if (response.equals("false")) {
+            delay(1000);
+        }
+        else if(response.equals("true")) {
+            do_artwork();
+        }
+    } else {
+        ;
+    }
+    http.end();
+  }
   delay(500);
 }
