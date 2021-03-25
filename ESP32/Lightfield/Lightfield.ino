@@ -19,8 +19,10 @@ double r1 = 8.89; // cm
 double r2 = 9.85; // cm
 double maxrad = r1 + r2 - 0.1; // cm (small tolerance provided)
 
+int servo_rotation;
+
 void setup() {
-  Serial.begin(9600);
+  //Serial.begin(9600);
   stepper.setSpeed(15);
 
   for (int i = 0; i < 3; i++) {
@@ -30,6 +32,9 @@ void setup() {
 
   servo.setPeriodHertz(50);
   servo.attach(15, 500, 2500); // This will find an unused PWM channel to attach to
+
+  servo_rotation = 90;
+  servo.write(90);
 }
 
 void stepper_move(int steps) {
@@ -39,6 +44,23 @@ void stepper_move(int steps) {
 
 void stepper_to_angle(double angle) { // Calculated with acos, so should remain bounded
   stepper_move((int) (stepsPerRevolution*(angle/360.0) - currentRotation));
+}
+
+void combo_move(double th1, double th2) {
+  int stepper_steps = (int) (stepsPerRevolution*(th1/360.0) - currentRotation);
+  int servo_delta = th2 - servo_rotation;
+
+  int granularity = 5;
+  for (int i = 0; i < stepper_steps - granularity; i += granularity) {
+    currentRotation += granularity;
+    stepper.step(granularity);
+    servo.write(servo_rotation + servo_delta * (i * 1.0/stepper_steps));
+    delay(100);
+  }
+  // Account for any remaining steps
+  stepper_to_angle(th1);
+  servo.write((int) th2);
+  servo_rotation = (int) th2;
 }
 
 void setColor(byte r, byte g, byte b) {
@@ -57,16 +79,17 @@ void move_to_polar(double rad, double ang) {
   theta2 *= 180.0 / PI;
   theta1 = ang - theta1;
   theta2 = 180 + SERVO_OFFSET - theta2;
-  stepper_to_angle(theta1);
-  servo.write((int)theta2);
-  Serial.print(theta1);
-  Serial.print("  ");
-  Serial.println(theta2);
+  //stepper_to_angle(theta1);
+  //servo.write((int)theta2);
+  combo_move(theta1, theta2);
+  //Serial.print(theta1);
+  //Serial.print("  ");
+  //Serial.println(theta2);
 }
 
 void loop() {
-  for (float i = 0.1; i < 1.0; i += 0.1) {
+  for (float i = 0.1; i < 1.0; i += 0.01) {
     move_to_polar(i, 35);
-    delay(500);
+    delay(50);
   }
 }
