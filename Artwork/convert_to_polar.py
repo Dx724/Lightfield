@@ -1,14 +1,17 @@
 from PIL import Image
 import math
 
-p = Image.open("The-Starry-Night.jpg")
+### Configuration Begin ###
+FILE_PATH = "The-Starry-Night.jpg"
+NUM_POINTS = 1500
+ANGULAR_SPACING = 4
+### Configuration End ###
 
+p = Image.open(FILE_PATH)
 w = p.width
 h = p.height
 
 center = (w/2, h/2)
-
-NUM_POINTS = 1500
 
 data_r = []
 data_a = []
@@ -21,10 +24,10 @@ with open("artwork.h", "w+") as f:
     f.write("void do_artwork() {\n")
     while dist > 0.05:
         f.write("\tled_off();\n")
-        for ang in range(-180, 181, 4):
+        for ang in range(-180, 181, ANGULAR_SPACING):
             polar_coord = (dist, ang)
             px = round(w/2 + dist * w / 2 * math.cos(math.radians(ang)))
-            py = round(w/2 + dist * w / 2 * math.sin(math.radians(ang)))
+            py = round(w/2 - dist * w / 2 * math.sin(math.radians(ang)))
             color = p.getpixel((px, py))
             f.write("\tdo_arc({:.2f}, {}, {}, {}, {});\n".format(*polar_coord, *color))
             data_r.append(dist)
