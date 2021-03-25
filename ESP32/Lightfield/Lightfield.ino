@@ -7,9 +7,9 @@ Stepper stepper = Stepper(stepsPerRevolution, 14, 26, 27, 25);
 int currentRotation = 0;
 
 Servo servo;
-const int SERVO_OFFSET = 2; // Extra degrees past 45 to point straight back to center
+const int SERVO_OFFSET = 0; // Extra degrees past 180 to point straight back to center (should be a negative or zero quantity)
 
-const int ledPins[] = {2, 32, 33}; // R, G, B
+const int ledPins[] = {33, 32, 2}; // R, G, B
 const int pwmCh[] = {5, 6, 7};
 int red = 255;
 int green = 0;
@@ -49,15 +49,14 @@ void setColor(byte r, byte g, byte b) {
 
 void move_to_polar(double rad, double ang) {
   rad *= maxrad;
+  if (rad == 0) // Avoid divide-by-zero issues
+    rad = 0.001;
   double theta1 = acos((r1*r1+rad*rad-r2*r2)/(2*r1*rad));
   double theta2 = acos((r1*r1+r2*r2-rad*rad)/(2*r1*r2));
   theta1 *= 180.0 / PI;
   theta2 *= 180.0 / PI;
   theta1 = ang - theta1;
-  theta2 = 45 + SERVO_OFFSET - theta2;
-  if (theta2 < 0) {
-    theta2 += 90; // Always want positive theta2
-  }
+  theta2 = 180 + SERVO_OFFSET - theta2;
   stepper_to_angle(theta1);
   servo.write((int)theta2);
   Serial.print(theta1);
@@ -66,10 +65,8 @@ void move_to_polar(double rad, double ang) {
 }
 
 void loop() {
-  move_to_polar(0.5, 20);\
-  setColor(255, 0, 0);
-  delay(1000);
-  move_to_polar(0.2, 40);
-  setColor(0, 0, 255);
-  delay(1000);
+  for (float i = 0.1; i < 1.0; i += 0.1) {
+    move_to_polar(i, 35);
+    delay(500);
+  }
 }
