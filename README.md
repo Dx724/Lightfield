@@ -1,7 +1,7 @@
 # Lightfield <!-- omit in toc -->
 ## Unvisualized data in the world around us
-![Image of the Lightfield device]()
-![Long exposure photograph of the Lightfield device output]()
+![Image of the Lightfield device](Media/device_photo.jpg)
+![Long exposure photograph of the Lightfield device output](Media/Lightfield_TheStarryNight.jpg)
 
 [Video Demo](https://youtu.be/BLsY4mXNk7k)
 
