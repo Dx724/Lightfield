@@ -1,5 +1,9 @@
 # Lightfield <!-- omit in toc -->
 ## Unvisualized data in the world around us
+![Image of the Lightfield device]()
+![Long exposure photograph of the Lightfield device output]()
+
+[Video Demo](https://youtu.be/BLsY4mXNk7k)
 
 Our universe is filled with data. Every raindrop that falls, star that twinkles, or car that moves represents another rich datapoint in our vast and awe-inspiring world. Yet, to the average human onlooker, it's just "random".
 
@@ -36,11 +40,13 @@ The enclosure of this device was based on a large cylindrical can, paralleling t
 5. Using the [Servo_Test sketch](Test%20Programs/Servo_Test/Servo_Test.ino), rotate the servo to 180°.
 6. Attach a four-pronged servo arm to the servo, but before screwing it in, drill a hole near the end of another popsicle stick and thread the screw through that hole and then into the servo. The stick should be attached so that if it points "down" at 180°, it will point "left" at 90° (the Servo_Test sketch can be modified to validate this).
 7. Mount the servo to the unconnnected end of the stepper motor popsicle stick so that at 180°, the popscicle stick of the servo points directly towards the stepper motor shaft.
-8. Mount the RGB LED at the unconnected end of the servo motor popsicle stick so that it points upwards. This can be achieved by bending the LED's pins at a 90° angle.
-9. Cut a small hole at any point along the upper edge of the cylindrical enclosure to allow wires (for the stepper motor, servo motor, and RGB LED) to pass through.
-10. Place a smaller can (or other object) inside of the larger can and place the ESP32 inside the larger can, supported by the smaller can, so that it is oriented vertically.
-11. Drill a hole on the side surface near the bottom of the larger can. Pass a USB cable through this hole and connect it to the ESP32.
-12. Wire up the electronics as described in [ESP32 Wiring](#esp32-wiring) and then close the enclosure.
+8. Measure the distance along the stick's long axis between the two motors' shafts. Store this as `r1` in `ESP32/Lightfield/Lightfield.ino`.
+9. Mount the RGB LED at the unconnected end of the servo motor popsicle stick so that it points upwards. This can be achieved by bending the LED's pins at a 90° angle.
+10. Measure the distance between the LED's center and the stepper motor's rotational axis along the long axis of the stick connecting them. Store this as `r2` in `ESP32/Lightfield/Lightfield.ino`.
+11. Cut a small hole at any point along the upper edge of the cylindrical enclosure to allow wires (for the stepper motor, servo motor, and RGB LED) to pass through.
+12. Place a smaller can (or other object) inside of the larger can and place the ESP32 inside the larger can, supported by the smaller can, so that it is oriented vertically.
+13. Drill a hole on the side surface near the bottom of the larger can. Pass a USB cable through this hole and connect it to the ESP32.
+14. Wire up the electronics as described in [ESP32 Wiring](#esp32-wiring) and then close the enclosure.
    
 ## ESP32 Wiring
 __Stepper Motor__
@@ -52,6 +58,7 @@ __Stepper Motor__
 6. Connect the stepper's PWR pin to the motor driver's PWR output pin.
 7. Connect the motor driver's GND to the ESP32's GND.
 8. Connect the motor driver's VCC and PWR input pins to a 5V source (with common ground between that source and the ESP32).
+9. Change `stepsPerRevolution` in `ESP32/Lightfield/Lightfield.ino` to be equal to the number of steps per full revolution for the stepper motor used.
 
 __Servo Motor__
 
@@ -63,11 +70,15 @@ _Note that sufficiently long wires (on the order of two popsicle stick lengths) 
 
 __RGB LED__
 
-_Note that a common anode RGB LED was used. See [Common Cathode LEDs](#common-cathode-leds) below for common cathode LED usage instructions._
+_Note that a common anode RGB LED was used. See [Common Cathode LEDs](#common-cathode-leds) below for common cathode LED usage instructions. Larger resistors (e.g., 2 kΩ) can be used to reduce brightness._
 1. Connect the common anode to a 3.3V supply.
 2. Connect the red LED cathode to GPIO 33 through a 220 Ω resistor.
 3. Connect the green LED cathode to GPIO 32 through a 220 Ω resistor.
-4. Connect the blue LED cathode to GPIO 4 through a 220 Ω resistor.
+4. Connect the blue LED cathode to GPIO 13 through a 220 Ω resistor.
+
+__Testing__
+
+Tester programs are available in the `Test Programs/` directory to ensure proper functionality and connection of each component ([Stepper Motor](Test%20Programs/Stepper_Test/Stepper_Test.ino), [Servo Motor](Test%20Programs/Servo_Test/Servo_Test.ino), and [RGB LED](Test%20Programs/LED_Test/LED_Test.ino)).
 
 ## Common Cathode LEDs
 To connect a common cathode RGB LED:
@@ -100,6 +111,7 @@ To connect a common cathode RGB LED:
         const char *wifi_password = "YOUR_WIFI_PASSWORD";
 
 2. Upload the [sketch](ESP32/Lightfield/Lightfield.ino) to your ESP32.
+3. When the device starts, the LED will turn red. Once it has connected to the internet, the LED will become green. Then, the API can be used to start the motion.
 
 # Configuration
 ## What to draw?
