@@ -13,7 +13,7 @@ int currentRotation = 0;
 Servo servo;
 const int SERVO_OFFSET = 0; // Extra degrees past 180 to point straight back to center (should be a negative or zero quantity)
 
-const int ledPins[] = {33, 32, 4}; // R, G, B
+const int ledPins[] = {33, 32, 13}; // R, G, B
 const int pwmCh[] = {5, 6, 7};
 
 double r1 = 8.89; // cm
