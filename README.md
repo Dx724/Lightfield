@@ -125,7 +125,9 @@ A premade sketch to draw a portion of the _Mona Lisa_ is provided [here](ESP32/L
  Copy the `artwork.h` file into `ESP32/Lightfield/`, replacing the preexisting file and then follow the instructions in [Installation](#installation) to upload the new artwork onto the device.
 
 ## Can I draw something myself?
-Of course! A web app is provided in `Web/` which can be accessed by opening [`Web/Index.html`](Web/Index.html) in your web browser of choice. Click within the circular field to draw and click along the color slider to change the brush color. Then, right click and save the image. Follow the instructions in [What to draw?](#what-to-draw) to prepare your drawing for the Lightfield.
+Of course! A web app is provided in `Web/` which can be accessed by opening [`Web/Index.html`](Web/Index.html) in your web browser of choice. Click within the circular field to draw and click along the color slider to change the brush color.
+![Sample drawing from the web app](Artwork/download.png)
+Once you are done, right click and save the image. Follow the instructions in [What to draw?](#what-to-draw) to prepare your drawing for the Lightfield.
 
 ## Why spirals?
 The Lightfield artwork upload code is programmed to move in a spiral so that the choreography appears orderly yet decoupled from the final result to human viewers. However, the Lightfield is actually capable to more complex pathing such as linear motion. For example, the following code can be placed in the `loop` function of the `Lightfield.ino` sketch to draw a straight line:
