@@ -1,4 +1,4 @@
-const int ledPins[] = {33, 32, 4}; // R, G, B
+const int ledPins[] = {33, 32, 13}; // R, G, B
 const int pwmCh[] = {5, 6, 7};
 
 double BRIGHTNESS = 1.0; // Allow scaling down brightness to enable longer exposures
@@ -26,5 +26,9 @@ void loop() {
   setColor(0, 255, 0);
   delay(1000);
   setColor(0, 0, 255);
+  delay(1000);
+  setColor(255, 255, 255);
+  delay(1000);
+  setColor(0, 0, 0);
   delay(1000);
 }
